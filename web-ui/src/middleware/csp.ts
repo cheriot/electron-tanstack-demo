@@ -1,0 +1,26 @@
+import { createMiddleware } from '@tanstack/react-start'
+import { setResponseHeader } from '@tanstack/react-start/server'
+
+export const cspMiddleware = createMiddleware().server(({ next }) => {
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+
+  const cspDirectives = {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", `'nonce-${nonce}'`],
+    'style-src': ["'self'", "'unsafe-inline'"],
+    'img-src': ["'self'", 'data:', 'blob:'],
+    'font-src': ["'self'"],
+    'connect-src': ["'self'"],
+    'frame-ancestors': ["'self'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+  }
+  const cspHeader = Object.entries(cspDirectives)
+    .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
+    .join('; ')
+
+  setResponseHeader('Content-Security-Policy', cspHeader)
+  return next({
+    context: { nonce }
+  })
+})
