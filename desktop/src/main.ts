@@ -33,6 +33,27 @@ const createWindow = async () => {
     },
   });
 
+  // Security: Restrict navigation to localhost only
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    const parsedUrl = new URL(url);
+    // Only allow navigation to localhost/127.0.0.1
+    if (!['localhost', '127.0.0.1'].includes(parsedUrl.hostname)) {
+      event.preventDefault();
+      console.warn('Blocked navigation to:', url);
+    }
+  });
+
+  // Security: Control new window creation
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    const parsedUrl = new URL(url);
+    // Deny all new windows, or only allow specific localhost URLs
+    if (['localhost', '127.0.0.1'].includes(parsedUrl.hostname)) {
+      return { action: 'allow' };
+    }
+    console.warn('Blocked window.open to:', url);
+    return { action: 'deny' };
+  });
+
   // Load from the server
   if (!app.isPackaged) {
     // Development: Use web-ui's Vite dev server
