@@ -10,5 +10,12 @@
     "build:desktop": "pnpm --filter desktop make",
     "package": "pnpm --filter desktop package",
     "make": "pnpm --filter desktop make"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron",
+      "electron-winstaller",
+      "better-sqlite3"
+    ]
   }
 }
