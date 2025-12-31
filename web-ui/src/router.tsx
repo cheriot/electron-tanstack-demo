@@ -12,9 +12,9 @@ export async function getRouter() {
   let nonce: string | undefined
   if (typeof window === 'undefined') {
     // Dynamic import for server-only code
-    const { getStartContext } = await import('@tanstack/start-storage-context');
-    const context = getStartContext();
-    nonce = context.contextAfterGlobalMiddlewares?.nonce;
+    const { getStartContext } = await import('@tanstack/start-storage-context')
+    const context = getStartContext()
+    nonce = context.contextAfterGlobalMiddlewares?.nonce
   }
 
   const router = createRouter({

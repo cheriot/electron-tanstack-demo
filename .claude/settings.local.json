@@ -3,7 +3,12 @@
     "allow": [
       "mcp__ide__getDiagnostics",
       "WebFetch(domain:tanstack.com)",
-      "WebFetch(domain:nitro.build)"
+      "WebFetch(domain:nitro.build)",
+      "WebFetch(domain:registry.npmjs.org)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
   }
 }

@@ -38,19 +38,19 @@ export async function startServer(secret: string): Promise<number> {
   server = createServer(listener)
 
   return new Promise((resolve, reject) => {
-    server!.listen(serverPort, '127.0.0.1', () => {
+    server.listen(serverPort, '127.0.0.1', () => {
       console.log(`Nitro server started on port ${serverPort}`)
       resolve(serverPort)
     })
 
-    server!.on('error', reject)
+    server.on('error', reject)
   })
 }
 
 export async function stopServer(): Promise<void> {
   if (server) {
     return new Promise((resolve) => {
-      server!.close(() => {
+      server.close(() => {
         server = null
         resolve()
       })

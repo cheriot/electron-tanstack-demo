@@ -2,12 +2,13 @@ import { createMiddleware } from '@tanstack/react-start'
 import { setResponseHeaders } from '@tanstack/react-start/server'
 
 export const cspMiddleware = createMiddleware().server(({ next }) => {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
   const cspDirectives = {
     'default-src': ["'self'"],
     'script-src': ["'self'", `'nonce-${nonce}'`],
     'style-src': ["'self'", "'unsafe-inline'"],
+    'worker-src': process.env.NODE_ENV === 'development' ? ["'self'", 'blob:'] : ["'self'"],
     'img-src': ["'self'", 'data:', 'blob:'],
     'font-src': ["'self'"],
     'connect-src': ["'self'"],
@@ -26,6 +27,6 @@ export const cspMiddleware = createMiddleware().server(({ next }) => {
   })
 
   return next({
-    context: { nonce }
+    context: { nonce },
   })
 })

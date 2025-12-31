@@ -9,13 +9,16 @@
     "build:web": "pnpm --filter web-ui build",
     "build:desktop": "pnpm --filter desktop make",
     "package": "pnpm --filter desktop package",
-    "make": "pnpm --filter desktop make"
+    "make": "pnpm --filter desktop make",
+    "lint": "pnpm --recursive lint",
+    "typecheck": "pnpm --recursive typecheck"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "better-sqlite3",
       "electron",
-      "electron-winstaller",
-      "better-sqlite3"
+      "esbuild",
+      "unrs-resolver"
     ]
   }
 }

@@ -12,7 +12,9 @@ export const electronAuthMiddleware = createMiddleware().server(({ next }) => {
 
   // Auth disabled via ELECTRON_AUTH_REQUIRED=false
   if (!authRequired) {
-    console.warn('WARNING: Electron authentication is disabled. This should only be used in development.')
+    console.warn(
+      'WARNING: Electron authentication is disabled. This should only be used in development.',
+    )
     return next()
   }
 

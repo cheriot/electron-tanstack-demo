@@ -16,7 +16,7 @@ if (started) {
 }
 
 let mainWindow: BrowserWindow | null = null;
-let serverPort: number = 0;
+let serverPort = 0;
 
 const createWindow = async () => {
   // Generate auth secret and start the embedded Nitro server

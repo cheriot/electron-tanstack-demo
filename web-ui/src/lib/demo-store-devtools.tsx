@@ -1,7 +1,7 @@
 import { EventClient } from '@tanstack/devtools-event-client'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-import { store, fullName } from './demo-store'
+import { fullName, store } from './demo-store'
 
 type EventMap = {
   'store-devtools:state': {
@@ -45,15 +45,15 @@ function DevtoolPanel() {
       <div className="text-sm font-bold text-gray-500 whitespace-nowrap">
         First Name
       </div>
-      <div className="text-sm">{state?.firstName}</div>
+      <div className="text-sm">{state.firstName}</div>
       <div className="text-sm font-bold text-gray-500 whitespace-nowrap">
         Last Name
       </div>
-      <div className="text-sm">{state?.lastName}</div>
+      <div className="text-sm">{state.lastName}</div>
       <div className="text-sm font-bold text-gray-500 whitespace-nowrap">
         Full Name
       </div>
-      <div className="text-sm">{state?.fullName}</div>
+      <div className="text-sm">{state.fullName}</div>
     </div>
   )
 }
