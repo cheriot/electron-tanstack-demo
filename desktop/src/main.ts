@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, session } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { startServer, stopServer } from './server';
@@ -21,6 +21,12 @@ const createWindow = async () => {
     app.quit();
     return;
   }
+
+  // Security: Deny all permission requests by default
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    console.warn('Denied permission request:', permission);
+    callback(false); // Deny all by default
+  });
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

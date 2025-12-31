@@ -1,5 +1,5 @@
 import { createMiddleware } from '@tanstack/react-start'
-import { setResponseHeader } from '@tanstack/react-start/server'
+import { setResponseHeaders } from '@tanstack/react-start/server'
 
 export const cspMiddleware = createMiddleware().server(({ next }) => {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
@@ -19,7 +19,12 @@ export const cspMiddleware = createMiddleware().server(({ next }) => {
     .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
     .join('; ')
 
-  setResponseHeader('Content-Security-Policy', cspHeader)
+  setResponseHeaders({
+    'Content-Security-Policy': cspHeader,
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+  })
+
   return next({
     context: { nonce }
   })
