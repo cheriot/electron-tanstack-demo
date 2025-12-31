@@ -2,14 +2,17 @@
   "name": "desktop",
   "productName": "desktop",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Electron app with embedded TanStack Start",
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
+    "dev": "concurrently \"cd ../web-ui && pnpm dev\" \"sleep 3 && electron-forge start\"",
+    "build:web": "cd ../web-ui && pnpm build",
+    "package": "pnpm build:web && electron-forge package",
+    "make": "pnpm build:web && electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint": "eslint --ext .ts,.tsx .",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
   },
   "keywords": [],
   "author": {
@@ -20,7 +23,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "electron",
-      "electron-winstaller"
+      "electron-winstaller",
+      "better-sqlite3"
     ]
   },
   "devDependencies": {
@@ -33,9 +37,12 @@
     "@electron-forge/plugin-fuses": "^7.10.2",
     "@electron-forge/plugin-vite": "^7.10.2",
     "@electron/fuses": "^1.8.0",
+    "@electron/rebuild": "^3.6.0",
+    "@types/better-sqlite3": "^7.6.0",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
+    "concurrently": "^9.1.0",
     "electron": "39.2.7",
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.32.0",
@@ -43,6 +50,7 @@
     "vite": "^5.4.21"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "get-port": "^7.1.0"
   }
 }

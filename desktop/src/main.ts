@@ -1,33 +1,47 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import { startServer, stopServer } from './server';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
   app.quit();
 }
 
-const createWindow = () => {
+let mainWindow: BrowserWindow | null = null;
+let serverPort: number = 0;
+
+const createWindow = async () => {
+  // Start the embedded Nitro server (or get dev server port)
+  try {
+    serverPort = await startServer();
+    console.log(`Server available on port ${serverPort}`);
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    app.quit();
+    return;
+  }
+
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+  mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: false,
+      contextIsolation: true,
     },
   });
 
-  // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  // Load from the server
+  if (!app.isPackaged) {
+    // Development: Use web-ui's Vite dev server
+    mainWindow.loadURL(`http://localhost:${serverPort}`);
+    mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadFile(
-      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
-    );
+    // Production: Use embedded Nitro server
+    mainWindow.loadURL(`http://127.0.0.1:${serverPort}`);
   }
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -38,7 +52,8 @@ app.on('ready', createWindow);
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
+  await stopServer();
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -52,5 +67,6 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+app.on('before-quit', async () => {
+  await stopServer();
+});

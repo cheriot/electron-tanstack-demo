@@ -9,9 +9,15 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
+    asar: {
+      unpack: '*.{node,dylib}',
+    },
+    extraResource: ['../web-ui/.output'],
   },
-  rebuildConfig: {},
+  rebuildConfig: {
+    onlyModules: ['better-sqlite3'],
+    force: true,
+  },
   makers: [
     new MakerSquirrel({}),
     new MakerZIP({}, ['darwin']),
@@ -35,12 +41,8 @@ const config: ForgeConfig = {
           target: 'preload',
         },
       ],
-      renderer: [
-        {
-          name: 'main_window',
-          config: 'vite.renderer.config.ts',
-        },
-      ],
+      // Script loaded into the browser. Empty because it's reading from the tanstack start server.
+      renderer: [],
     }),
     // Fuses are used to enable/disable various Electron functionality
     // at package time, before code signing the application

@@ -7,9 +7,23 @@ import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
 const config = defineConfig({
+  server: {
+    port: 3000,
+    strictPort: true,
+  },
   plugins: [
     devtools(),
-    nitro(),
+    nitro({
+      preset: 'node',
+      output: {
+        dir: '.output',
+        serverDir: '.output/server',
+        publicDir: '.output/public',
+      },
+      rollupConfig: {
+        external: ['better-sqlite3'],
+      },
+    }),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],

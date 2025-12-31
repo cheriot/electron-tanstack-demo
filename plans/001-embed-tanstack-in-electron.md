@@ -35,16 +35,11 @@ nitro({
 **New file:** `desktop/src/server.ts`
 
 - Export `startServer(isDev)` - returns port number
-- Use `get-port` library for port selection (prefer 3000 in both modes)
+- Use `get-port` library for port selection in prod
 - In dev mode: return the port web-ui is running on
 - In production: dynamically import Nitro from `.output/server/index.mjs`, create HTTP server
 - Export `stopServer()` for cleanup
 - Set `ELECTRON_APP_PATH` env var for database location
-
-```typescript
-import getPort from 'get-port'
-const port = await getPort({ port: 3000 })
-```
 
 ### 3. Update Electron main process
 **File:** `desktop/src/main.ts`

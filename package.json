@@ -1,0 +1,14 @@
+{
+  "name": "electron-tanstack-demo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter desktop dev",
+    "dev:web": "pnpm --filter web-ui dev",
+    "dev:desktop": "pnpm --filter desktop start",
+    "build": "pnpm --filter web-ui build && pnpm --filter desktop make",
+    "build:web": "pnpm --filter web-ui build",
+    "build:desktop": "pnpm --filter desktop make",
+    "package": "pnpm --filter desktop package",
+    "make": "pnpm --filter desktop make"
+  }
+}
