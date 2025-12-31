@@ -38,7 +38,7 @@
     "@tanstack/react-router": "^1.144.0",
     "@tanstack/react-router-devtools": "^1.144.0",
     "@tanstack/react-router-ssr-query": "^1.144.0",
-    "@tanstack/react-start": "^1.145.2",
+    "@tanstack/react-start": "^1.145.3",
     "@tanstack/react-store": "^0.8.0",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/router-plugin": "^1.145.2",
@@ -74,7 +74,7 @@
     "prettier": "^3.5.3",
     "tsx": "^4.0.0",
     "typescript": "^5.7.2",
-    "vite": "^7.1.7",
+    "vite": "^7.3.0",
     "vitest": "^3.0.5",
     "web-vitals": "^5.1.0"
   }
