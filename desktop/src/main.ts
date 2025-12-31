@@ -1,7 +1,14 @@
 import { app, BrowserWindow, session } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { startServer, stopServer } from './server';
+import { generateSecret, startServer, stopServer } from './server';
+
+// Single source of truth for server URL
+function getServerUrl(port: number): string {
+  return app.isPackaged
+    ? `http://127.0.0.1:${port}`
+    : `http://localhost:${port}`;
+}
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -12,15 +19,27 @@ let mainWindow: BrowserWindow | null = null;
 let serverPort: number = 0;
 
 const createWindow = async () => {
-  // Start the embedded Nitro server (or get dev server port)
+  // Generate auth secret and start the embedded Nitro server
+  const secret = generateSecret();
   try {
-    serverPort = await startServer();
+    serverPort = await startServer(secret);
     console.log(`Server available on port ${serverPort}`);
   } catch (error) {
     console.error('Failed to start server:', error);
     app.quit();
     return;
   }
+
+  const serverUrl = getServerUrl(serverPort);
+
+  // Inject auth header into all requests to our server
+  session.defaultSession.webRequest.onBeforeSendHeaders(
+    { urls: [`${serverUrl}/*`] },
+    (details, callback) => {
+      details.requestHeaders['X-Electron-Auth'] = secret;
+      callback({ requestHeaders: details.requestHeaders });
+    }
+  );
 
   // Security: Deny all permission requests by default
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
@@ -61,13 +80,9 @@ const createWindow = async () => {
   });
 
   // Load from the server
+  mainWindow.loadURL(serverUrl);
   if (!app.isPackaged) {
-    // Development: Use web-ui's Vite dev server
-    mainWindow.loadURL(`http://localhost:${serverPort}`);
     mainWindow.webContents.openDevTools();
-  } else {
-    // Production: Use embedded Nitro server
-    mainWindow.loadURL(`http://127.0.0.1:${serverPort}`);
   }
 };
 
