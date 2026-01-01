@@ -4,7 +4,9 @@
       "mcp__ide__getDiagnostics",
       "WebFetch(domain:tanstack.com)",
       "WebFetch(domain:nitro.build)",
-      "WebFetch(domain:registry.npmjs.org)"
+      "WebFetch(domain:registry.npmjs.org)",
+      "WebFetch(domain:playwright.dev)",
+      "WebFetch(domain:vitest.dev)"
     ]
   },
   "sandbox": {

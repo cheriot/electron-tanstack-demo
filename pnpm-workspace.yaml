@@ -3,11 +3,7 @@ packages:
   - web-ui
 
 ignoredBuiltDependencies:
-  - better-sqlite3
-  - electron
   - electron-winstaller
-  - esbuild
-  - unrs-resolver
 
 onlyBuiltDependencies:
   - better-sqlite3

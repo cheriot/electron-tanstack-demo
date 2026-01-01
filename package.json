@@ -10,6 +10,7 @@
     "build:desktop": "pnpm --filter desktop make",
     "package": "pnpm --filter desktop package",
     "make": "pnpm --filter desktop make",
+    "delvitecache": "rm -rf web-ui/node_modules/.vite web-ui/node_modules/.vite-temp",
     "lint": "pnpm --recursive lint",
     "typecheck": "pnpm --recursive typecheck"
   },

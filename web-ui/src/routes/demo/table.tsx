@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import {
@@ -105,7 +106,7 @@ function TableDemo() {
   )
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(50_000)) // stress test
+  const refreshData = () => setData(() => makeData(50_000)) // stress test
 
   const table = useReactTable({
     data,
@@ -136,7 +137,8 @@ function TableDemo() {
         table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
-  }, [table.getState().columnFilters[0]?.id])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table, table.getState().columnFilters[0]?.id])
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
@@ -164,12 +166,20 @@ function TableDemo() {
                       {header.isPlaceholder ? null : (
                         <>
                           <div
-                            {...{
-                              className: header.column.getCanSort()
+                            className={
+                              header.column.getCanSort()
                                 ? 'cursor-pointer select-none hover:text-blue-400 transition-colors'
-                                : '',
-                              onClick: header.column.getToggleSortingHandler(),
+                                : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            onKeyDown={(e: React.KeyboardEvent) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                header.column.getToggleSortingHandler()?.(e)
+                              }
                             }}
+                            role={header.column.getCanSort() ? 'button' : undefined}
+                            tabIndex={header.column.getCanSort() ? 0 : undefined}
                           >
                             {flexRender(
                               header.column.columnDef.header,
@@ -347,7 +357,7 @@ function DebouncedInput({
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value])
+  }, [value, onChange, debounce])
 
   return (
     <input

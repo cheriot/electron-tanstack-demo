@@ -1,5 +1,3 @@
-import '@/polyfill'
-
 import { OpenAPIHandler } from '@orpc/openapi/fetch'
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'
 import { SmartCoercionPlugin } from '@orpc/json-schema'

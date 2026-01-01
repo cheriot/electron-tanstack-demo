@@ -6,7 +6,9 @@ export const cspMiddleware = createMiddleware().server(({ next }) => {
 
   const cspDirectives = {
     'default-src': ["'self'"],
-    'script-src': ["'self'", `'nonce-${nonce}'`],
+    'script-src': process.env.NODE_ENV === 'development'
+      ? ["'self'", `'nonce-${nonce}'`, "'unsafe-eval'"]
+      : ["'self'", `'nonce-${nonce}'`],
     'style-src': ["'self'", "'unsafe-inline'"],
     'worker-src': process.env.NODE_ENV === 'development' ? ["'self'", 'blob:'] : ["'self'"],
     'img-src': ["'self'", 'data:', 'blob:'],

@@ -52,15 +52,15 @@ export const Route = createFileRoute('/demo/start/server-funcs')({
 
 function Home() {
   const router = useRouter()
-  let todos = Route.useLoaderData()
+  const todos = Route.useLoaderData()
 
   const [todo, setTodo] = useState('')
 
   const submitTodo = useCallback(async () => {
-    todos = await addTodo({ data: todo })
+    await addTodo({ data: todo })
     setTodo('')
     router.invalidate()
-  }, [addTodo, todo])
+  }, [todo, router])
 
   return (
     <div
