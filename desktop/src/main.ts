@@ -1,6 +1,7 @@
 import { app, BrowserWindow, session } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
+import log from 'electron-log';
 import { generateSecret, startServer, stopServer } from './server';
 
 // Single source of truth for server URL
@@ -23,9 +24,9 @@ const createWindow = async () => {
   const secret = generateSecret();
   try {
     serverPort = await startServer(secret);
-    console.log(`Server available on port ${serverPort}`);
+    log.info(`Server available on port ${serverPort}`);
   } catch (error) {
-    console.error('Failed to start server:', error);
+    log.error('Failed to start server:', error);
     app.quit();
     return;
   }
@@ -43,7 +44,7 @@ const createWindow = async () => {
 
   // Security: Deny all permission requests by default
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
-    console.warn('Denied permission request:', permission);
+    log.warn('Denied permission request:', permission);
     callback(false); // Deny all by default
   });
 
@@ -64,7 +65,7 @@ const createWindow = async () => {
     // Only allow navigation to localhost/127.0.0.1
     if (!['localhost', '127.0.0.1'].includes(parsedUrl.hostname)) {
       event.preventDefault();
-      console.warn('Blocked navigation to:', url);
+      log.warn('Blocked navigation to:', url);
     }
   });
 
@@ -75,7 +76,7 @@ const createWindow = async () => {
     if (['localhost', '127.0.0.1'].includes(parsedUrl.hostname)) {
       return { action: 'allow' };
     }
-    console.warn('Blocked window.open to:', url);
+    log.warn('Blocked window.open to:', url);
     return { action: 'deny' };
   });
 

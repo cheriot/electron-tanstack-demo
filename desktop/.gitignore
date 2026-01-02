@@ -26,6 +26,9 @@ coverage
 # nyc test coverage
 .nyc_output
 
+# playwright results
+test-results/*
+
 # node-waf configuration
 .lock-wscript
 

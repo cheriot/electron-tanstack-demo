@@ -1,6 +1,7 @@
 import { createRouter } from '@tanstack/react-router'
 import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query'
 import * as TanstackQuery from './integrations/tanstack-query/root-provider'
+import { getNonce } from './lib/get-nonce'
 
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
@@ -11,10 +12,8 @@ export async function getRouter() {
 
   let nonce: string | undefined
   if (typeof window === 'undefined') {
-    // Dynamic import for server-only code
-    const { getStartContext } = await import('@tanstack/start-storage-context')
-    const context = getStartContext()
-    nonce = context.contextAfterGlobalMiddlewares?.nonce
+    // Get nonce from server function to avoid bundling server-only code in client
+    nonce = await getNonce()
   }
 
   const router = createRouter({

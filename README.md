@@ -10,28 +10,9 @@ Demo of turning a Tanstack Start app into a desktop app. web-ui/ still runs as a
 └── web-ui/      # Tanstack Start
 ```
 
-## Setup
-
-```bash
-pnpm install
-```
-
 ## Development
 
-Run both web-ui dev server and Electron together:
-
-```bash
-pnpm dev
-```
-
-Or run them separately:
-
-```bash
-pnpm dev:web      # web-ui only at http://localhost:3000
-pnpm dev:desktop  # Electron only (requires web-ui running)
-```
-
-Dev mode uses a normal Tanstack Start dev server with vite and hot reloading.
+See [Development.md](DEVELOPMENT.md).
 
 ## Production Build
 
@@ -42,6 +23,10 @@ pnpm build
 ```
 
 The packaged app will be in `desktop/out/`. It will run Nitro on localhost serving the web app. Strict CSP and a shared secret guard against XSS and other local processes.
+
+```bash
+open desktop/out/desktop-darwin-arm64/desktop.app
+```
 
 ## Related Links
 

@@ -14,7 +14,8 @@
     "publish": "electron-forge publish",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "test:e2e": "PW_E2E=1 pnpm package && playwright test"
   },
   "keywords": [],
   "author": {
@@ -36,22 +37,25 @@
     "@eslint/compat": "^2.0.0",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.57.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/electron-squirrel-startup": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
     "concurrently": "^9.2.1",
     "electron": "39.2.7",
+    "electron-playwright-helpers": "^2.1.0",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-security": "^3.0.1",
     "globals": "^16.5.0",
     "typescript": "^5.9.3",
-    "eslint-plugin-security": "^3.0.1",
     "vite": "^7.3.0"
   },
   "dependencies": {
     "@electron-forge/shared-types": "^7.10.2",
     "@types/node": "^24.0.0",
+    "electron-log": "^5.4.3",
     "electron-squirrel-startup": "^1.0.1",
     "get-port": "^7.1.0"
   }

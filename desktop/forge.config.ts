@@ -7,6 +7,11 @@ import { VitePlugin } from '@electron-forge/plugin-vite';
 import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
+const isPlaywrightE2E = process.env.PW_E2E === '1';
+if (isPlaywrightE2E) {
+  console.warn('Running in Playwright E2E mode. **Do not ship this build** to users.');
+}
+
 const config: ForgeConfig = {
   packagerConfig: {
     asar: {
@@ -50,8 +55,8 @@ const config: ForgeConfig = {
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
       [FuseV1Options.EnableCookieEncryption]: true,
-      [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-      [FuseV1Options.EnableNodeCliInspectArguments]: false,
+      [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: isPlaywrightE2E,
+      [FuseV1Options.EnableNodeCliInspectArguments]: isPlaywrightE2E,
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),

@@ -3,6 +3,7 @@ import { createServer, type Server } from 'node:http'
 import path from 'node:path'
 import { app } from 'electron'
 import getPort from 'get-port'
+import log from 'electron-log'
 
 export function generateSecret(): string {
   return crypto.randomBytes(32).toString('hex')
@@ -26,25 +27,20 @@ export async function startServer(secret: string): Promise<number> {
   // Production: Start embedded Nitro server
   const serverDir = path.join(process.resourcesPath, '.output', 'server')
 
-  // Set environment variables before importing the server
+  // Set environment variables BEFORE importing - Nitro auto-starts on import
   process.env.ELECTRON_APP_PATH = app.getPath('userData')
   process.env.NODE_ENV = 'production'
   process.env.ELECTRON_AUTH_REQUIRED = 'true'
   process.env.ELECTRON_AUTH_SECRET = secret
+  process.env.NITRO_PORT = serverPort.toString()
+  process.env.NITRO_HOST = '127.0.0.1'
 
-  // Dynamic import of the built Nitro server
-  const { listener } = await import(path.join(serverDir, 'index.mjs'))
+  // Dynamic import of the built Nitro server (auto-starts immediately)
+  await import(path.join(serverDir, 'index.mjs'))
 
-  server = createServer(listener)
-
-  return new Promise((resolve, reject) => {
-    server.listen(serverPort, '127.0.0.1', () => {
-      console.log(`Nitro server started on port ${serverPort}`)
-      resolve(serverPort)
-    })
-
-    server.on('error', reject)
-  })
+  // Nitro has already started listening
+  log.info(`Nitro server started on 127.0.0.1:${serverPort}`)
+  return serverPort
 }
 
 export async function stopServer(): Promise<void> {
