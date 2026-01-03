@@ -1,6 +1,16 @@
 # Electron & Tanstack Start
 
-Demo of turning a Tanstack Start app into a desktop app. web-ui/ still runs as a web app for maximum optionality.
+Demo of turning a Tanstack Start app into a desktop app with Electron. web-ui/ still runs as a web app for maximum optionality.
+
+The goal is to work on a new idea with Tanstack Start and not have to think about whether it will make more sense as a desktop or web app.
+
+## Features
+
+- Monorepo organization so web-ui/ can run inside the desktop app and as a web app with the same codebase.
+- desktop/ follows [Electron's security best practices](https://www.electronjs.org/docs/latest/tutorial/security). Rerun [002-electron-security-audit.md](plans/002-electron-security-audit.md) for current status.
+- desktop/ runs a server process built from web-ui/ secured by a shared secret. See [web-ui/src/middleware/electron-auth.ts](web-ui/src/middleware/electron-auth.ts) and [003-local-shared-secret.md](plans/003-local-shared-secret.md).
+- Strict CSP to guard against XSS. See [web-ui/src/middleware/csp.ts](web-ui/src/middleware/csp.ts).
+- A first e2e test of the packaged Electron app is included to confirm it all works. See [e2e/app.spec.ts](desktop/e2e/app.spec.ts) and [004-electron-e2e-test.md](plans/004-electron-e2e-test.md).
 
 ## Directory Structure
 
@@ -19,23 +29,19 @@ See [Development.md](DEVELOPMENT.md).
 Build web-ui and package Electron:
 
 ```bash
-pnpm build
+pnpm package
 ```
 
-The packaged app will be in `desktop/out/`. It will run Nitro on localhost serving the web app. Strict CSP and a shared secret guard against XSS and other local processes.
+The packaged app will be in `desktop/out/`. Run it locally with
 
 ```bash
 open desktop/out/desktop-darwin-arm64/desktop.app
 ```
 
-## Related Links
+Use `pnpm make` to create installers.
 
-- [TanStack Start Hosting Guide](https://tanstack.com/start/latest/docs/framework/react/guide/hosting)
-- [Nitro Node.js Runtime](https://nitro.build/deploy/runtimes/node)
-- [Nitro Configuration](https://nitro.build/config)
-- [Electron Forge](https://www.electronforge.io/)
 
 ## Generated From
 
-- `pnpm dlx create-electron-app@latest desktop --template=vite-typescript`
-- `pnpm create @tanstack/start@latest --no-git --tailwind --toolchain=eslint`
+- [Electron Forge](https://www.electronforge.io/) `pnpm dlx create-electron-app@latest desktop --template=vite-typescript`
+- [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) `pnpm create @tanstack/start@latest --no-git --tailwind --toolchain=eslint`

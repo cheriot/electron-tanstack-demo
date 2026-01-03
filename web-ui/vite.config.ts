@@ -29,6 +29,7 @@ const config = defineConfig({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
+    // react's vite plugin must come after start's vite plugin
     tanstackStart(),
     viteReact(),
   ],

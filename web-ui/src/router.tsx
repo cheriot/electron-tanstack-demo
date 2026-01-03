@@ -12,7 +12,6 @@ export async function getRouter() {
 
   let nonce: string | undefined
   if (typeof window === 'undefined') {
-    // Get nonce from server function to avoid bundling server-only code in client
     nonce = await getNonce()
   }
 

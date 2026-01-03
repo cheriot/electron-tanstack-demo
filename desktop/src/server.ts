@@ -27,6 +27,8 @@ export async function startServer(secret: string): Promise<number> {
   // Production: Start embedded Nitro server
   const serverDir = path.join(process.resourcesPath, '.output', 'server')
 
+  // See Nitro Node.js Runtime docs for how to use the server built by web-ui/
+  // https://nitro.build/deploy/runtimes/node
   // Set environment variables BEFORE importing - Nitro auto-starts on import
   process.env.ELECTRON_APP_PATH = app.getPath('userData')
   process.env.NODE_ENV = 'production'

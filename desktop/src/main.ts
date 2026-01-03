@@ -31,6 +31,9 @@ const createWindow = async () => {
     return;
   }
 
+  // Much of the code below is for security. See Electron's security best practices for detail.
+  // https://www.electronjs.org/docs/latest/tutorial/security)
+
   const serverUrl = getServerUrl(serverPort);
 
   // Inject auth header into all requests to our server
