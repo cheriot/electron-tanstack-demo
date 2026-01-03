@@ -5,6 +5,9 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
+import denyImports from 'unplugin-deny-imports/vite'
+import { preset } from 'unplugin-deny-imports/presets'
+
 
 const config = defineConfig({
   server: {
@@ -24,6 +27,7 @@ const config = defineConfig({
         external: ['better-sqlite3'],
       },
     }),
+    denyImports(preset({exclude: ['@tanstack/react-router'] })),
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
