@@ -12,7 +12,6 @@ import {
 } from '@tanstack/react-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 
-
 import type {
   Column,
   ColumnDef,
@@ -178,8 +177,12 @@ function TableDemo() {
                                 header.column.getToggleSortingHandler()?.(e)
                               }
                             }}
-                            role={header.column.getCanSort() ? 'button' : undefined}
-                            tabIndex={header.column.getCanSort() ? 0 : undefined}
+                            role={
+                              header.column.getCanSort() ? 'button' : undefined
+                            }
+                            tabIndex={
+                              header.column.getCanSort() ? 0 : undefined
+                            }
                           >
                             {flexRender(
                               header.column.columnDef.header,

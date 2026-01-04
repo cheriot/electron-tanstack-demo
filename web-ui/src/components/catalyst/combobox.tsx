@@ -16,7 +16,7 @@ export function Combobox<T>({
   children,
   ...props
 }: {
-  options: T[]
+  options: Array<T>
   displayValue: (value: T | null) => string | undefined
   filter?: (value: T, query: string) => boolean
   className?: string
@@ -24,18 +24,27 @@ export function Combobox<T>({
   autoFocus?: boolean
   'aria-label'?: string
   children: (value: NonNullable<T>) => React.ReactElement
-} & Omit<Headless.ComboboxProps<T, false>, 'as' | 'multiple' | 'children'> & { anchor?: 'top' | 'bottom' }) {
+} & Omit<Headless.ComboboxProps<T, false>, 'as' | 'multiple' | 'children'> & {
+    anchor?: 'top' | 'bottom'
+  }) {
   const [query, setQuery] = useState('')
 
   const filteredOptions =
     query === ''
       ? options
       : options.filter((option) =>
-          filter ? filter(option, query) : displayValue(option)?.toLowerCase().includes(query.toLowerCase())
+          filter
+            ? filter(option, query)
+            : displayValue(option)?.toLowerCase().includes(query.toLowerCase()),
         )
 
   return (
-    <Headless.Combobox {...props} multiple={false} virtual={{ options: filteredOptions }} onClose={() => setQuery('')}>
+    <Headless.Combobox
+      {...props}
+      multiple={false}
+      virtual={{ options: filteredOptions }}
+      onClose={() => setQuery('')}
+    >
       <span
         data-slot="control"
         className={clsx([
@@ -90,8 +99,18 @@ export function Combobox<T>({
             aria-hidden="true"
             fill="none"
           >
-            <path d="M5.75 10.75L8 13L10.25 10.75" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M10.25 5.25L8 3L5.75 5.25" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M5.75 10.75L8 13L10.25 10.75"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M10.25 5.25L8 3L5.75 5.25"
+              strokeWidth={1.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </Headless.ComboboxButton>
       </span>
@@ -112,7 +131,7 @@ export function Combobox<T>({
           // Shadows
           'shadow-lg ring-1 ring-zinc-950/10 dark:ring-white/10 dark:ring-inset',
           // Transitions
-          'transition-opacity duration-100 ease-in data-closed:data-leave:opacity-0 data-transition:pointer-events-none'
+          'transition-opacity duration-100 ease-in data-closed:data-leave:opacity-0 data-transition:pointer-events-none',
         )}
       >
         {({ option }) => children(option)}
@@ -129,7 +148,7 @@ export function ComboboxOption<T>({
   Headless.ComboboxOptionProps<'div', T>,
   'as' | 'className'
 >) {
-  let sharedClasses = clsx(
+  const sharedClasses = clsx(
     // Base
     'flex min-w-0 items-center',
     // Icons
@@ -137,7 +156,7 @@ export function ComboboxOption<T>({
     '*:data-[slot=icon]:text-zinc-500 group-data-focus/option:*:data-[slot=icon]:text-white dark:*:data-[slot=icon]:text-zinc-400',
     'forced-colors:*:data-[slot=icon]:text-[CanvasText] forced-colors:group-data-focus/option:*:data-[slot=icon]:text-[Canvas]',
     // Avatars
-    '*:data-[slot=avatar]:-mx-0.5 *:data-[slot=avatar]:size-6 sm:*:data-[slot=avatar]:size-5'
+    '*:data-[slot=avatar]:-mx-0.5 *:data-[slot=avatar]:size-6 sm:*:data-[slot=avatar]:size-5',
   )
 
   return (
@@ -153,7 +172,7 @@ export function ComboboxOption<T>({
         // Forced colors mode
         'forced-color-adjust-none forced-colors:data-focus:bg-[Highlight] forced-colors:data-focus:text-[HighlightText]',
         // Disabled
-        'data-disabled:opacity-50'
+        'data-disabled:opacity-50',
       )}
     >
       <span className={clsx(className, sharedClasses)}>{children}</span>
@@ -163,23 +182,43 @@ export function ComboboxOption<T>({
         fill="none"
         aria-hidden="true"
       >
-        <path d="M4 8.5l3 3L12 4" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M4 8.5l3 3L12 4"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     </Headless.ComboboxOption>
   )
 }
 
-export function ComboboxLabel({ className, ...props }: React.ComponentPropsWithoutRef<'span'>) {
-  return <span {...props} className={clsx(className, 'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0')} />
-}
-
-export function ComboboxDescription({ className, children, ...props }: React.ComponentPropsWithoutRef<'span'>) {
+export function ComboboxLabel({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<'span'>) {
   return (
     <span
       {...props}
       className={clsx(
         className,
-        'flex flex-1 overflow-hidden text-zinc-500 group-data-focus/option:text-white before:w-2 before:min-w-0 before:shrink dark:text-zinc-400'
+        'ml-2.5 truncate first:ml-0 sm:ml-2 sm:first:ml-0',
+      )}
+    />
+  )
+}
+
+export function ComboboxDescription({
+  className,
+  children,
+  ...props
+}: React.ComponentPropsWithoutRef<'span'>) {
+  return (
+    <span
+      {...props}
+      className={clsx(
+        className,
+        'flex flex-1 overflow-hidden text-zinc-500 group-data-focus/option:text-white before:w-2 before:min-w-0 before:shrink dark:text-zinc-400',
       )}
     >
       <span className="flex-1 truncate">{children}</span>

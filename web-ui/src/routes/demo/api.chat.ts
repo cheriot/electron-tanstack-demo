@@ -1,19 +1,19 @@
 import {
-  streamText,
-  UIMessage,
   convertToModelMessages,
-  tool,
+  gateway,
   stepCountIs,
+  streamText, tool 
 } from 'ai'
-import { gateway } from 'ai'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
+import type {
+  UIMessage} from 'ai';
 
 export const Route = createFileRoute('/demo/api/chat')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { messages }: { messages: UIMessage[] } = await request.json()
+        const { messages }: { messages: Array<UIMessage> } = await request.json()
 
         const result = streamText({
           model: gateway('xai/grok-code-fast-1'),
