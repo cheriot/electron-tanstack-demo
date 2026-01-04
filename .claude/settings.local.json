@@ -12,5 +12,8 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": true
-  }
+  },
+  "enabledMcpjsonServers": [
+    "exa"
+  ]
 }
