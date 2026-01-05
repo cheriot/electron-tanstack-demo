@@ -34,6 +34,12 @@ export default [
     },
   },
   {
-    ignores: ['*.config.js', '.output/**', '.vinxi/**', 'dist/**'],
+    ignores: [
+      '*.config.js',
+      '.output/**',
+      '.vinxi/**',
+      'dist/**',
+      'src/components/ai-elements/**',
+    ],
   },
 ]
