@@ -19,8 +19,8 @@ function Chat() {
     <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
       <h1 className="text-2xl font-bold mb-4 text-white">AI Chat Demo</h1>
       <p className="text-gray-400 mb-8">
-        Try asking about the weather! e.g. "What's the weather in New York in
-        celsius?"
+        Try asking about the weather! e.g. &quot;What&apos;s the weather in New York in
+        celsius?&quot;
       </p>
 
       {messages.map((message) => (

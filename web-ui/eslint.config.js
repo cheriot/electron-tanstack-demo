@@ -25,6 +25,15 @@ export default [
     },
   },
   {
-    ignores: ['*.config.js'],
+    rules: {
+      // This one can be used appropriately.
+      'jsx-a11y/no-autofocus': 'off',
+      // These two don't see children passed through ...props
+      'jsx-a11y/anchor-has-content': 'off',
+      'jsx-a11y/heading-has-content': 'off',
+    },
+  },
+  {
+    ignores: ['*.config.js', '.output/**', '.vinxi/**', 'dist/**'],
   },
 ]

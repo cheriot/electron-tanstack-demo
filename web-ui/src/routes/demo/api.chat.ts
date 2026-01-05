@@ -27,7 +27,7 @@ export const Route = createFileRoute('/demo/api/chat')({
                   .string()
                   .describe('The location to get the weather for'),
               }),
-              execute: async ({ location }) => {
+              execute: ({ location }) => {
                 const temperature = Math.round(Math.random() * (90 - 32) + 32)
                 return {
                   location,
@@ -42,7 +42,7 @@ export const Route = createFileRoute('/demo/api/chat')({
                   .number()
                   .describe('The temperature in fahrenheit to convert'),
               }),
-              execute: async ({ temperature }) => {
+              execute: ({ temperature }) => {
                 const celsius = Math.round((temperature - 32) * (5 / 9))
                 return {
                   celsius,
