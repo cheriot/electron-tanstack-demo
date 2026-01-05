@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { forwardRef } from 'react'
 import { TouchTarget } from './button'
 import { Link } from './link'
-import type React from 'react';
+import type React from 'react'
 
 type AvatarProps = {
   src?: string | null

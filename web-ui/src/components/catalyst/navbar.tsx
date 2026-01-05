@@ -6,7 +6,7 @@ import { LayoutGroup, motion } from 'motion/react'
 import { forwardRef, useId } from 'react'
 import { TouchTarget } from './button'
 import { Link } from './link'
-import type React from 'react';
+import type React from 'react'
 
 export function Navbar({
   className,
