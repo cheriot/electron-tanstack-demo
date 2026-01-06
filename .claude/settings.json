@@ -7,7 +7,8 @@
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:playwright.dev)",
       "WebFetch(domain:vitest.dev)",
-      "WebFetch(domain:ai-sdk.dev)"
+      "WebFetch(domain:ai-sdk.dev)",
+      "Bash(pnpm lint:*)"
     ]
   },
   "enabledMcpjsonServers": [
