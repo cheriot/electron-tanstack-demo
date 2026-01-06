@@ -6,14 +6,15 @@
       "WebFetch(domain:nitro.build)",
       "WebFetch(domain:registry.npmjs.org)",
       "WebFetch(domain:playwright.dev)",
-      "WebFetch(domain:vitest.dev)"
+      "WebFetch(domain:vitest.dev)",
+      "WebFetch(domain:ai-sdk.dev)"
     ]
-  },
-  "sandbox": {
-    "enabled": true,
-    "autoAllowBashIfSandboxed": true
   },
   "enabledMcpjsonServers": [
     "exa"
-  ]
+  ],
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  }
 }

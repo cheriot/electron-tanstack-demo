@@ -1,70 +1,107 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { useState } from 'react'
+import {
+  Conversation,
+  ConversationContent,
+  ConversationEmptyState,
+  ConversationScrollButton,
+} from '@/components/ai-elements/conversation'
+import {
+  Message,
+  MessageContent,
+  MessageResponse,
+} from '@/components/ai-elements/message'
+import {
+  PromptInput,
+  PromptInputBody,
+  PromptInputFooter,
+  PromptInputSubmit,
+  PromptInputTextarea,
+} from '@/components/ai-elements/prompt-input'
 
 export const Route = createFileRoute('/demo/chat')({
   component: Chat,
 })
 
 function Chat() {
-  const [input, setInput] = useState('')
-  const { messages, sendMessage } = useChat({
+  const { messages, sendMessage, status } = useChat({
     transport: new DefaultChatTransport({
       api: '/demo/api/chat',
     }),
   })
 
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      <h1 className="text-2xl font-bold mb-4 text-white">AI Chat Demo</h1>
-      <p className="text-gray-400 mb-8">
-        Try asking about the weather! e.g. &quot;What&apos;s the weather in New York in
-        celsius?&quot;
-      </p>
+    <div className="flex min-h-full w-full flex-col">
+      <div className="border-b p-4">
+        <h1 className="text-2xl font-bold">AI Chat Demo</h1>
+        <p className="text-muted-foreground text-sm">
+          Try asking about the weather! e.g. &quot;What&apos;s the weather in
+          New York in celsius?&quot;
+        </p>
+      </div>
 
-      {messages.map((message) => (
-        <div key={message.id} className="whitespace-pre-wrap mb-4">
-          <span className="font-semibold text-cyan-400">
-            {message.role === 'user' ? 'User: ' : 'AI: '}
-          </span>
-          {message.parts.map((part, i) => {
-            switch (part.type) {
-              case 'text':
-                return (
-                  <span key={`${message.id}-${i}`} className="text-gray-200">
-                    {part.text}
-                  </span>
-                )
-              case 'tool-weather':
-              case 'tool-convertFahrenheitToCelsius':
-                return (
-                  <pre
-                    key={`${message.id}-${i}`}
-                    className="bg-slate-800 p-2 rounded mt-2 text-sm text-gray-300 overflow-auto"
-                  >
-                    {JSON.stringify(part, null, 2)}
-                  </pre>
-                )
-            }
-          })}
-        </div>
-      ))}
+      <Conversation>
+        <ConversationContent>
+          {messages.length === 0 ? (
+            <ConversationEmptyState
+              title="Start a conversation"
+              description="Ask me anything about the weather!"
+            />
+          ) : (
+            messages.map((message) => (
+              <Message key={message.id} from={message.role}>
+                <MessageContent>
+                  {message.parts.map((part, i) => {
+                    switch (part.type) {
+                      case 'text':
+                        return (
+                          <MessageResponse key={`${message.id}-${i}`}>
+                            {part.text}
+                          </MessageResponse>
+                        )
+                      case 'tool-weather':
+                      case 'tool-convertFahrenheitToCelsius':
+                        return (
+                          <div
+                            key={`${message.id}-${i}`}
+                            className="rounded-lg bg-muted p-3 font-mono text-xs"
+                          >
+                            <div className="mb-1 font-semibold">
+                              {part.type === 'tool-weather'
+                                ? 'Weather Tool'
+                                : 'Temperature Conversion'}
+                            </div>
+                            <pre className="whitespace-pre-wrap">
+                              {JSON.stringify(part, null, 2)}
+                            </pre>
+                          </div>
+                        )
+                    }
+                  })}
+                </MessageContent>
+              </Message>
+            ))
+          )}
+        </ConversationContent>
+        <ConversationScrollButton />
+      </Conversation>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          sendMessage({ text: input })
-          setInput('')
-        }}
-      >
-        <input
-          className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
-          value={input}
-          placeholder="Say something..."
-          onChange={(e) => setInput(e.currentTarget.value)}
-        />
-      </form>
+      <div className="border-t p-4">
+        <PromptInput
+          onSubmit={(message) => {
+            sendMessage({ text: message.text })
+          }}
+        >
+          <PromptInputBody>
+            <PromptInputTextarea placeholder="Ask me anything..." />
+          </PromptInputBody>
+          <PromptInputFooter>
+            <div />
+            <PromptInputSubmit status={status} />
+          </PromptInputFooter>
+        </PromptInput>
+      </div>
     </div>
   )
 }
