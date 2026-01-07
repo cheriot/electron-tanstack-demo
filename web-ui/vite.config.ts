@@ -5,6 +5,7 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
+// import Inspect from 'vite-plugin-inspect'
 
 const config = defineConfig({
   server: {
@@ -13,6 +14,7 @@ const config = defineConfig({
   },
   plugins: [
     devtools(),
+    // Inspect(), // Enable to debug when node APIs are called from the browser.
     nitro({
       preset: 'node',
       output: {

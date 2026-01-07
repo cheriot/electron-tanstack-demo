@@ -2,3 +2,6 @@ node_modules
 *.db
 .env
 **/.env
+
+.vscode
+.claude/settings.local.json

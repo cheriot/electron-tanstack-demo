@@ -11,3 +11,4 @@ const dbPath = process.env.ELECTRON_APP_PATH
 
 const sqlite = new Database(dbPath)
 export const db = drizzle(sqlite, { schema })
+export type DB = typeof db

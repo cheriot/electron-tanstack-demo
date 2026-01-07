@@ -1,33 +1,39 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createIdGenerator } from 'ai'
-import type { UIMessage } from 'ai'
+import type { StoredUIMessage } from '@/lib/message-types'
 import { streamWeatherAgent } from '@/lib/agents'
-import { loadChat, saveChat } from '@/lib/chat-store'
+import { loadChat, upsertMessage } from '@/lib/dao/chatDao'
+import { db } from '@/db'
 
 export const Route = createFileRoute('/demo/api/chat')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const { message, id }: { message: UIMessage; id: string } =
+        const { message, id }: { message: StoredUIMessage; id: string } =
           await request.json()
 
-        // Load previous messages from chat store
-        const previousMessages = await loadChat(id)
+        // Save user message first
+        upsertMessage({ chatId: id, id: message.id, message, db })
 
-        // Append new message to previous messages
-        const messages = [...previousMessages, message]
+        // Load all messages including the one we just saved
+        const messages = await loadChat(id, db)
 
         const result = await streamWeatherAgent({ messages })
 
         return result.stream.toUIMessageStreamResponse({
           originalMessages: messages,
-          // Generate consistent server-side IDs for persistence
-          generateMessageId: createIdGenerator({
-            prefix: 'msg',
-            size: 16,
-          }),
-          onFinish: ({ messages }) => {
-            saveChat({ chatId: id, messages })
+          onError: (error) => {
+            // Error messages are masked by default for security reasons.
+            // If you want to expose the error message to the client, you can do so here:
+            return error instanceof Error ? error.message : String(error)
+          },
+          onFinish: ({ responseMessage }) => {
+            // Save assistant response
+            upsertMessage({
+              chatId: id,
+              id: responseMessage.id,
+              message: responseMessage,
+              db,
+            })
           },
         })
       },

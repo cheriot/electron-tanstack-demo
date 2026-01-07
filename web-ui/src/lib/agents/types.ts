@@ -1,4 +1,5 @@
-import type { LanguageModel, StreamTextResult, UIMessage } from 'ai'
+import type { LanguageModel, StreamTextResult } from 'ai'
+import type { StoredUIMessage } from '../message-types'
 
 /**
  * Agent configuration
@@ -13,7 +14,7 @@ export interface AgentConfig {
  * Input/Output types
  */
 export interface AgentInput {
-  messages: Array<UIMessage>
+  messages: Array<StoredUIMessage>
   config?: Partial<AgentConfig>
 }
 
@@ -24,7 +25,7 @@ export interface AgentStreamResult {
 }
 
 export interface AgentGenerateResult {
-  messages: Array<UIMessage>
+  messages: Array<StoredUIMessage>
   toolCalls: Array<{
     toolName: string
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

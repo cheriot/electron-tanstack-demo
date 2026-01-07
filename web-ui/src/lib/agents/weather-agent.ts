@@ -61,8 +61,10 @@ const convertFahrenheitToCelsiusTool = tool({
 
 /**
  * Weather agent tools
+ *
+ * Exported for type inference in message-types.ts
  */
-const WEATHER_TOOLS = {
+export const WEATHER_TOOLS = {
   weather: weatherTool,
   convertFahrenheitToCelsius: convertFahrenheitToCelsiusTool,
 }

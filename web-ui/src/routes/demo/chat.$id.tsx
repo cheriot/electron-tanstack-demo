@@ -1,7 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
-import { loadChat } from '@/lib/chat-store'
+import type { StoredUIMessage } from '@/lib/message-types'
+import { client } from '@/orpc/client'
+
 import {
   Conversation,
   ConversationContent,
@@ -23,21 +25,24 @@ import {
 
 export const Route = createFileRoute('/demo/chat/$id')({
   loader: async ({ params }) => {
-    const messages = await loadChat(params.id)
-    return { messages: messages as any, chatId: params.id }
+    const messages = await client.loadChat({ id: params.id })
+    return { messages, chatId: params.id }
   },
   component: Chat,
 })
 
 function Chat() {
   const { messages: initialMessages, chatId } = Route.useLoaderData()
-  const { messages, sendMessage, status } = useChat({
+  // Cast to StoredUIMessage for ai-sdk compatibility.
+  // oRPC uses Zod types; useChat needs ai-sdk types.
+  const { messages, sendMessage, status } = useChat<StoredUIMessage>({
     id: chatId,
-    messages: initialMessages,
+    messages: initialMessages as unknown as Array<StoredUIMessage>,
     transport: new DefaultChatTransport({
       api: '/demo/api/chat',
-      // Only send the last message to the server
+      // eslint-disable-next-line no-shadow
       prepareSendMessagesRequest({ messages, id }) {
+        // Only send the last message to the server
         return { body: { message: messages[messages.length - 1], id } }
       },
     }),
