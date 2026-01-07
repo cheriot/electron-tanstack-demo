@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
 import { DefaultChatTransport } from 'ai'
+import { loadChat } from '@/lib/chat-store'
 import {
   Conversation,
   ConversationContent,
@@ -20,14 +21,25 @@ import {
   PromptInputTextarea,
 } from '@/components/ai-elements/prompt-input'
 
-export const Route = createFileRoute('/demo/chat')({
+export const Route = createFileRoute('/demo/chat/$id')({
+  loader: async ({ params }) => {
+    const messages = await loadChat(params.id)
+    return { messages: messages as any, chatId: params.id }
+  },
   component: Chat,
 })
 
 function Chat() {
+  const { messages: initialMessages, chatId } = Route.useLoaderData()
   const { messages, sendMessage, status } = useChat({
+    id: chatId,
+    messages: initialMessages,
     transport: new DefaultChatTransport({
       api: '/demo/api/chat',
+      // Only send the last message to the server
+      prepareSendMessagesRequest({ messages, id }) {
+        return { body: { message: messages[messages.length - 1], id } }
+      },
     }),
   })
 

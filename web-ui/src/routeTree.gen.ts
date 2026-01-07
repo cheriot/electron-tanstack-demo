@@ -15,12 +15,13 @@ import { Route as DemoTableRouteImport } from './routes/demo/table'
 import { Route as DemoStoreRouteImport } from './routes/demo/store'
 import { Route as DemoOrpcTodoRouteImport } from './routes/demo/orpc-todo'
 import { Route as DemoDrizzleRouteImport } from './routes/demo/drizzle'
-import { Route as DemoChatRouteImport } from './routes/demo/chat'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
+import { Route as DemoChatIndexRouteImport } from './routes/demo/chat.index'
 import { Route as DemoStartServerFuncsRouteImport } from './routes/demo/start.server-funcs'
 import { Route as DemoStartApiRequestRouteImport } from './routes/demo/start.api-request'
 import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
 import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
+import { Route as DemoChatIdRouteImport } from './routes/demo/chat.$id'
 import { Route as DemoApiTqTodosRouteImport } from './routes/demo/api.tq-todos'
 import { Route as DemoApiNamesRouteImport } from './routes/demo/api.names'
 import { Route as DemoApiChatRouteImport } from './routes/demo/api.chat'
@@ -60,14 +61,14 @@ const DemoDrizzleRoute = DemoDrizzleRouteImport.update({
   path: '/demo/drizzle',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoChatRoute = DemoChatRouteImport.update({
-  id: '/demo/chat',
-  path: '/demo/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoChatIndexRoute = DemoChatIndexRouteImport.update({
+  id: '/demo/chat/',
+  path: '/demo/chat/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoStartServerFuncsRoute = DemoStartServerFuncsRouteImport.update({
@@ -88,6 +89,11 @@ const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
 const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
   id: '/demo/form/address',
   path: '/demo/form/address',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoChatIdRoute = DemoChatIdRouteImport.update({
+  id: '/demo/chat/$id',
+  path: '/demo/chat/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoApiTqTodosRoute = DemoApiTqTodosRouteImport.update({
@@ -134,7 +140,6 @@ const DemoStartSsrDataOnlyRoute = DemoStartSsrDataOnlyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
-  '/demo/chat': typeof DemoChatRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
   '/demo/orpc-todo': typeof DemoOrpcTodoRoute
   '/demo/store': typeof DemoStoreRoute
@@ -144,10 +149,12 @@ export interface FileRoutesByFullPath {
   '/demo/api/chat': typeof DemoApiChatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
+  '/demo/chat/$id': typeof DemoChatIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/demo/chat': typeof DemoChatIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -156,7 +163,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
-  '/demo/chat': typeof DemoChatRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
   '/demo/orpc-todo': typeof DemoOrpcTodoRoute
   '/demo/store': typeof DemoStoreRoute
@@ -166,10 +172,12 @@ export interface FileRoutesByTo {
   '/demo/api/chat': typeof DemoApiChatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
+  '/demo/chat/$id': typeof DemoChatIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/demo/chat': typeof DemoChatIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -179,7 +187,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/$': typeof ApiSplatRoute
-  '/demo/chat': typeof DemoChatRoute
   '/demo/drizzle': typeof DemoDrizzleRoute
   '/demo/orpc-todo': typeof DemoOrpcTodoRoute
   '/demo/store': typeof DemoStoreRoute
@@ -189,10 +196,12 @@ export interface FileRoutesById {
   '/demo/api/chat': typeof DemoApiChatRoute
   '/demo/api/names': typeof DemoApiNamesRoute
   '/demo/api/tq-todos': typeof DemoApiTqTodosRoute
+  '/demo/chat/$id': typeof DemoChatIdRoute
   '/demo/form/address': typeof DemoFormAddressRoute
   '/demo/form/simple': typeof DemoFormSimpleRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
+  '/demo/chat/': typeof DemoChatIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
@@ -203,7 +212,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/api/$'
-    | '/demo/chat'
     | '/demo/drizzle'
     | '/demo/orpc-todo'
     | '/demo/store'
@@ -213,10 +221,12 @@ export interface FileRouteTypes {
     | '/demo/api/chat'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
+    | '/demo/chat/$id'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/demo/chat'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -225,7 +235,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/api/$'
-    | '/demo/chat'
     | '/demo/drizzle'
     | '/demo/orpc-todo'
     | '/demo/store'
@@ -235,10 +244,12 @@ export interface FileRouteTypes {
     | '/demo/api/chat'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
+    | '/demo/chat/$id'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/demo/chat'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -247,7 +258,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/api/$'
-    | '/demo/chat'
     | '/demo/drizzle'
     | '/demo/orpc-todo'
     | '/demo/store'
@@ -257,10 +267,12 @@ export interface FileRouteTypes {
     | '/demo/api/chat'
     | '/demo/api/names'
     | '/demo/api/tq-todos'
+    | '/demo/chat/$id'
     | '/demo/form/address'
     | '/demo/form/simple'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
+    | '/demo/chat/'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
@@ -270,7 +282,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiSplatRoute: typeof ApiSplatRoute
-  DemoChatRoute: typeof DemoChatRoute
   DemoDrizzleRoute: typeof DemoDrizzleRoute
   DemoOrpcTodoRoute: typeof DemoOrpcTodoRoute
   DemoStoreRoute: typeof DemoStoreRoute
@@ -280,10 +291,12 @@ export interface RootRouteChildren {
   DemoApiChatRoute: typeof DemoApiChatRoute
   DemoApiNamesRoute: typeof DemoApiNamesRoute
   DemoApiTqTodosRoute: typeof DemoApiTqTodosRoute
+  DemoChatIdRoute: typeof DemoChatIdRoute
   DemoFormAddressRoute: typeof DemoFormAddressRoute
   DemoFormSimpleRoute: typeof DemoFormSimpleRoute
   DemoStartApiRequestRoute: typeof DemoStartApiRequestRoute
   DemoStartServerFuncsRoute: typeof DemoStartServerFuncsRoute
+  DemoChatIndexRoute: typeof DemoChatIndexRoute
   DemoStartSsrDataOnlyRoute: typeof DemoStartSsrDataOnlyRoute
   DemoStartSsrFullSsrRoute: typeof DemoStartSsrFullSsrRoute
   DemoStartSsrSpaModeRoute: typeof DemoStartSsrSpaModeRoute
@@ -334,18 +347,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoDrizzleRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/chat': {
-      id: '/demo/chat'
-      path: '/demo/chat'
-      fullPath: '/demo/chat'
-      preLoaderRoute: typeof DemoChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/$': {
       id: '/api/$'
       path: '/api/$'
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/chat/': {
+      id: '/demo/chat/'
+      path: '/demo/chat'
+      fullPath: '/demo/chat'
+      preLoaderRoute: typeof DemoChatIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/start/server-funcs': {
@@ -374,6 +387,13 @@ declare module '@tanstack/react-router' {
       path: '/demo/form/address'
       fullPath: '/demo/form/address'
       preLoaderRoute: typeof DemoFormAddressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo/chat/$id': {
+      id: '/demo/chat/$id'
+      path: '/demo/chat/$id'
+      fullPath: '/demo/chat/$id'
+      preLoaderRoute: typeof DemoChatIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo/api/tq-todos': {
@@ -438,7 +458,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiSplatRoute: ApiSplatRoute,
-  DemoChatRoute: DemoChatRoute,
   DemoDrizzleRoute: DemoDrizzleRoute,
   DemoOrpcTodoRoute: DemoOrpcTodoRoute,
   DemoStoreRoute: DemoStoreRoute,
@@ -448,10 +467,12 @@ const rootRouteChildren: RootRouteChildren = {
   DemoApiChatRoute: DemoApiChatRoute,
   DemoApiNamesRoute: DemoApiNamesRoute,
   DemoApiTqTodosRoute: DemoApiTqTodosRoute,
+  DemoChatIdRoute: DemoChatIdRoute,
   DemoFormAddressRoute: DemoFormAddressRoute,
   DemoFormSimpleRoute: DemoFormSimpleRoute,
   DemoStartApiRequestRoute: DemoStartApiRequestRoute,
   DemoStartServerFuncsRoute: DemoStartServerFuncsRoute,
+  DemoChatIndexRoute: DemoChatIndexRoute,
   DemoStartSsrDataOnlyRoute: DemoStartSsrDataOnlyRoute,
   DemoStartSsrFullSsrRoute: DemoStartSsrFullSsrRoute,
   DemoStartSsrSpaModeRoute: DemoStartSsrSpaModeRoute,
