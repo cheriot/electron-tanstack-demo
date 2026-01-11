@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type { WEATHER_TOOLS } from './agents/weather-agent'
 import type { InferUITools, UIMessage, UIMessagePart } from 'ai'
 
@@ -85,3 +86,13 @@ export type StoredUIMessage = UIMessage<never, AppDataParts, AllTools>
  * Use this when iterating over message.parts in React components.
  */
 export type AppMessagePart = UIMessagePart<AppDataParts, AllTools>
+
+export const AppDataSchemas = {
+  weather: z.object({
+    loading: z.boolean(),
+    location: z.string().optional(),
+    temperature: z.number().optional(),
+  }),
+}
+
+export const MessageMetadataSchema = z.undefined().optional()

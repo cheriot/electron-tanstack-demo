@@ -425,17 +425,89 @@ describe('chatDao', () => {
         parts: [{ type: 'text', text: 'Hello' }],
       }
 
-      expect(() =>
+      await expect(
         upsertMessage({
           chatId,
-          id: 'msg-1',
           message: invalidMessage as unknown as StoredUIMessage,
           db: testDb.db,
         }),
-      ).toThrow()
+      ).rejects.toThrow()
 
       const storedMessages = await testDb.db.select().from(schema.messages)
       expect(storedMessages).toHaveLength(0)
+    })
+
+    it('should persist valid message with upsertMessage', async () => {
+      const chatId = await createChat(testDb.db)
+
+      const validMessage: StoredUIMessage = {
+        id: 'msg-1',
+        role: 'assistant',
+        parts: [{ type: 'text', text: 'Hello from assistant!' }],
+      }
+
+      await upsertMessage({
+        chatId,
+        message: validMessage,
+        db: testDb.db,
+      })
+
+      const loadedMessages = await loadChat(chatId, testDb.db)
+      expect(loadedMessages).toHaveLength(1)
+      expect(loadedMessages[0].id).toBe('msg-1')
+      expect(loadedMessages[0].role).toBe('assistant')
+      expect(loadedMessages[0].parts).toEqual([
+        { type: 'text', text: 'Hello from assistant!' },
+      ])
+    })
+
+    it('should update existing message with upsertMessage', async () => {
+      const chatId = await createChat(testDb.db)
+
+      const message: StoredUIMessage = {
+        id: 'msg-1',
+        role: 'assistant',
+        parts: [{ type: 'text', text: 'Original text' }],
+      }
+
+      await upsertMessage({ chatId, message, db: testDb.db })
+
+      // Update the message
+      const updatedMessage: StoredUIMessage = {
+        id: 'msg-1',
+        role: 'assistant',
+        parts: [{ type: 'text', text: 'Updated text' }],
+      }
+
+      await upsertMessage({ chatId, message: updatedMessage, db: testDb.db })
+
+      const loadedMessages = await loadChat(chatId, testDb.db)
+      expect(loadedMessages).toHaveLength(1)
+      expect(loadedMessages[0].parts).toEqual([
+        { type: 'text', text: 'Updated text' },
+      ])
+    })
+
+    it('should generate an id when message has empty string id', async () => {
+      const chatId = await createChat(testDb.db)
+
+      // Message with empty string id should get a generated id
+      const messageWithEmptyId: StoredUIMessage = {
+        id: '',
+        role: 'user',
+        parts: [{ type: 'text', text: 'Hello' }],
+      }
+
+      await insertMessages({
+        chatId,
+        messages: [messageWithEmptyId],
+        db: testDb.db,
+      })
+
+      const loadedMessages = await loadChat(chatId, testDb.db)
+      expect(loadedMessages).toHaveLength(1)
+      expect(loadedMessages[0].id).not.toBe('')
+      expect(loadedMessages[0].id.length).toBeGreaterThan(0)
     })
   })
 })

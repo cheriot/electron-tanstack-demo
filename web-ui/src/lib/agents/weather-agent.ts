@@ -6,6 +6,7 @@ import {
   tool,
 } from 'ai'
 import { z } from 'zod'
+import type { ToolSet } from 'ai'
 import type {
   AgentConfig,
   AgentGenerateResult,
@@ -67,7 +68,7 @@ const convertFahrenheitToCelsiusTool = tool({
 export const WEATHER_TOOLS = {
   weather: weatherTool,
   convertFahrenheitToCelsius: convertFahrenheitToCelsiusTool,
-}
+} satisfies ToolSet
 
 /**
  * Create a weather agent instance

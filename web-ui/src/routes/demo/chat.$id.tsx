@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useChat } from '@ai-sdk/react'
+// import { useSuspenseQuery } from '@tanstack/react-query'
 import { DefaultChatTransport } from 'ai'
 import type { StoredUIMessage } from '@/lib/message-types'
 import { client } from '@/orpc/client'
@@ -23,21 +24,30 @@ import {
   PromptInputTextarea,
 } from '@/components/ai-elements/prompt-input'
 
+// Use this type alias, the satisfies check below, and a cast to work around
+// ai-sdk 6's dynamic-tool type inference.
+type UseChatMessage = StoredUIMessage
+
 export const Route = createFileRoute('/demo/chat/$id')({
-  loader: async ({ params }) => {
-    const messages = await client.loadChat({ id: params.id })
-    return { messages, chatId: params.id }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  loader: async ({ params }): Promise<{ messages: any; id: string }> => {
+    // Note: this function returns StoredUIMessages[] as any because of a type
+    // inference issue with ai-sdk's dynamic-tool. Do not remove the "satisfies"
+    const messages = (await client.loadChat({
+      id: params.id,
+    })) satisfies Array<UseChatMessage>
+
+    return Promise.resolve({ messages, id: params.id })
   },
   component: Chat,
 })
 
 function Chat() {
-  const { messages: initialMessages, chatId } = Route.useLoaderData()
-  // Cast to StoredUIMessage for ai-sdk compatibility.
-  // oRPC uses Zod types; useChat needs ai-sdk types.
-  const { messages, sendMessage, status } = useChat<StoredUIMessage>({
+  const { messages: initialMessages, id: chatId } = Route.useLoaderData()
+
+  const { messages, sendMessage, status } = useChat<UseChatMessage>({
     id: chatId,
-    messages: initialMessages as unknown as Array<StoredUIMessage>,
+    messages: initialMessages as Array<UseChatMessage>,
     transport: new DefaultChatTransport({
       api: '/demo/api/chat',
       // eslint-disable-next-line no-shadow

@@ -12,7 +12,7 @@ export const Route = createFileRoute('/demo/api/chat')({
           await request.json()
 
         // Save user message first
-        upsertMessage({ chatId: id, id: message.id, message, db })
+        await upsertMessage({ chatId: id, message, db })
 
         // Load all messages including the one we just saved
         const messages = await loadChat(id, db)
@@ -26,11 +26,10 @@ export const Route = createFileRoute('/demo/api/chat')({
             // If you want to expose the error message to the client, you can do so here:
             return error instanceof Error ? error.message : String(error)
           },
-          onFinish: ({ responseMessage }) => {
+          onFinish: async ({ responseMessage }) => {
             // Save assistant response
-            upsertMessage({
+            await upsertMessage({
               chatId: id,
-              id: responseMessage.id,
               message: responseMessage,
               db,
             })
