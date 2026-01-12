@@ -6,6 +6,14 @@ import { getNonce } from './lib/get-nonce'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
+function NotFoundComponent() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <h1 className="text-2xl font-semibold">Page Not Found</h1>
+    </div>
+  )
+}
+
 // Create a new router instance
 export async function getRouter() {
   const rqContext = TanstackQuery.getContext()
@@ -22,6 +30,7 @@ export async function getRouter() {
     },
     ssr: { nonce },
     defaultPreload: 'intent',
+    defaultNotFoundComponent: NotFoundComponent,
   })
 
   setupRouterSsrQueryIntegration({ router, queryClient: rqContext.queryClient })

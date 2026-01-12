@@ -2,6 +2,7 @@
   "permissions": {
     "allow": [
       "mcp__ide__getDiagnostics",
+      "mcp__exa__get_code_context_exa",
       "WebFetch(domain:tanstack.com)",
       "WebFetch(domain:nitro.build)",
       "WebFetch(domain:registry.npmjs.org)",
