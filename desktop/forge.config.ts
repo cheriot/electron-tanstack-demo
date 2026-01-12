@@ -20,6 +20,7 @@ const config: ForgeConfig = {
     extraResource: ['../web-ui/.output'],
   },
   rebuildConfig: {
+    // Note: This will not rebuild the better-sqlite3 packaged with the web-ui server.
     onlyModules: ['better-sqlite3'],
     force: true,
   },
@@ -44,6 +45,11 @@ const config: ForgeConfig = {
           entry: 'src/preload.ts',
           config: 'vite.preload.config.ts',
           target: 'preload',
+        },
+        {
+          entry: 'src/nitro-worker.ts',
+          config: 'vite.main.config.ts',
+          target: 'main',
         },
       ],
       // Script loaded into the browser. Empty because it's reading from the tanstack start server.

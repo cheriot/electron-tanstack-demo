@@ -33,6 +33,7 @@ export const Route = createFileRoute('/demo/chat/$id')({
   loader: async ({ params }): Promise<{ messages: any; id: string }> => {
     // Note: this function returns StoredUIMessages[] as any because of a type
     // inference issue with ai-sdk's dynamic-tool. Do not remove the "satisfies"
+    // Keeping this hack in hopes ai-sdk fixes their type.
     const messages = (await client.loadChat({
       id: params.id,
     })) satisfies Array<UseChatMessage>

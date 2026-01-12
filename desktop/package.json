@@ -9,8 +9,9 @@
     "start": "electron-forge start",
     "dev": "concurrently \"cd ../web-ui && pnpm dev\" \"sleep 3 && electron-forge start\"",
     "build:web": "cd ../web-ui && pnpm build",
-    "package": "pnpm build:web && electron-forge package",
-    "make": "pnpm build:web && electron-forge make",
+    "rebuild:output": "electron-rebuild -f -w better-sqlite3 -m ../web-ui/.output/server",
+    "package": "pnpm build:web && pnpm rebuild:output && electron-forge package",
+    "make": "pnpm build:web && pnpm rebuild:output && electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -54,7 +55,7 @@
   },
   "dependencies": {
     "@electron-forge/shared-types": "^7.10.2",
-    "@types/node": "^24.0.0",
+    "@types/node": "^22.0.0",
     "electron-log": "^5.4.3",
     "electron-squirrel-startup": "^1.0.1",
     "get-port": "^7.1.0"
