@@ -25,8 +25,8 @@ import {
 } from '@/components/ai-elements/prompt-input'
 import {
   Tool,
-  ToolHeader,
   ToolContent,
+  ToolHeader,
   ToolInput,
   ToolOutput,
 } from '@/components/ai-elements/tool'
@@ -54,30 +54,31 @@ export const Route = createFileRoute('/demo/chat/$id')({
 function Chat() {
   const { messages: initialMessages, id: chatId } = Route.useLoaderData()
 
-  const { messages, sendMessage, status, addToolApprovalResponse } = useChat<UseChatMessage>({
-    id: chatId,
-    messages: initialMessages as Array<UseChatMessage>,
-    // Auto-send to server when a tool approval is responded (approved or denied)
-    sendAutomaticallyWhen: ({ messages: msgs }) => {
-      const lastMessage = msgs.at(-1)
-      return (
-        lastMessage?.parts?.some(
-          (part) =>
-            'state' in part &&
-            part.state === 'approval-responded' &&
-            'approval' in part
-        ) ?? false
-      )
-    },
-    transport: new DefaultChatTransport({
-      api: '/demo/api/chat',
-      // eslint-disable-next-line no-shadow
-      prepareSendMessagesRequest({ messages, id }) {
-        // Only send the last message to the server
-        return { body: { message: messages[messages.length - 1], id } }
+  const { messages, sendMessage, status, addToolApprovalResponse } =
+    useChat<UseChatMessage>({
+      id: chatId,
+      messages: initialMessages as Array<UseChatMessage>,
+      // Auto-send to server when a tool approval is responded (approved or denied)
+      sendAutomaticallyWhen: ({ messages: msgs }) => {
+        const lastMessage = msgs.at(-1)
+        return (
+          lastMessage?.parts.some(
+            (part) =>
+              'state' in part &&
+              part.state === 'approval-responded' &&
+              'approval' in part,
+          ) ?? false
+        )
       },
-    }),
-  })
+      transport: new DefaultChatTransport({
+        api: '/demo/api/chat',
+        // eslint-disable-next-line no-shadow
+        prepareSendMessagesRequest({ messages, id }) {
+          // Only send the last message to the server
+          return { body: { message: messages[messages.length - 1], id } }
+        },
+      }),
+    })
 
   return (
     <div className="flex min-h-full w-full flex-col">

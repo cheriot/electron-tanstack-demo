@@ -9,7 +9,7 @@ import { db } from '@/db'
  */
 function hasApprovalResponse(
   message: StoredUIMessage,
-  approved: boolean
+  approved: boolean,
 ): boolean {
   return (
     message.role === 'assistant' &&
@@ -18,7 +18,7 @@ function hasApprovalResponse(
         'state' in part &&
         part.state === 'approval-responded' &&
         'approval' in part &&
-        (part.approval as { approved?: boolean })?.approved === approved
+        (part.approval as { approved?: boolean }).approved === approved,
     )
   )
 }
