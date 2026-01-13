@@ -37,6 +37,7 @@ const convertFahrenheitToCelsiusInputSchema = z.object({
 const weatherTool = tool({
   description: 'Get the weather in a location (fahrenheit)',
   inputSchema: weatherInputSchema,
+  needsApproval: true,
   execute: ({ location }) => {
     const temperature = Math.round(Math.random() * (90 - 32) + 32)
     return {

@@ -23,6 +23,14 @@ import {
   PromptInputSubmit,
   PromptInputTextarea,
 } from '@/components/ai-elements/prompt-input'
+import {
+  Tool,
+  ToolHeader,
+  ToolContent,
+  ToolInput,
+  ToolOutput,
+} from '@/components/ai-elements/tool'
+import { Button } from '@/components/ui/button'
 
 // Use this type alias, the satisfies check below, and a cast to work around
 // ai-sdk 6's dynamic-tool type inference.
@@ -46,9 +54,21 @@ export const Route = createFileRoute('/demo/chat/$id')({
 function Chat() {
   const { messages: initialMessages, id: chatId } = Route.useLoaderData()
 
-  const { messages, sendMessage, status } = useChat<UseChatMessage>({
+  const { messages, sendMessage, status, addToolApprovalResponse } = useChat<UseChatMessage>({
     id: chatId,
     messages: initialMessages as Array<UseChatMessage>,
+    // Auto-send to server when a tool approval is responded (approved or denied)
+    sendAutomaticallyWhen: ({ messages: msgs }) => {
+      const lastMessage = msgs.at(-1)
+      return (
+        lastMessage?.parts?.some(
+          (part) =>
+            'state' in part &&
+            part.state === 'approval-responded' &&
+            'approval' in part
+        ) ?? false
+      )
+    },
     transport: new DefaultChatTransport({
       api: '/demo/api/chat',
       // eslint-disable-next-line no-shadow
@@ -91,19 +111,51 @@ function Chat() {
                       case 'tool-weather':
                       case 'tool-convertFahrenheitToCelsius':
                         return (
-                          <div
-                            key={`${message.id}-${i}`}
-                            className="rounded-lg bg-muted p-3 font-mono text-xs"
-                          >
-                            <div className="mb-1 font-semibold">
-                              {part.type === 'tool-weather'
-                                ? 'Weather Tool'
-                                : 'Temperature Conversion'}
-                            </div>
-                            <pre className="whitespace-pre-wrap">
-                              {JSON.stringify(part, null, 2)}
-                            </pre>
-                          </div>
+                          <Tool key={`${message.id}-${i}`}>
+                            <ToolHeader
+                              title={
+                                part.type === 'tool-weather'
+                                  ? 'Weather'
+                                  : 'Temperature Conversion'
+                              }
+                              type={part.type}
+                              state={part.state}
+                            />
+                            <ToolContent>
+                              <ToolInput input={part.input} />
+                              {part.state === 'approval-requested' && (
+                                <div className="flex gap-2 p-4">
+                                  <Button
+                                    size="sm"
+                                    onClick={() =>
+                                      addToolApprovalResponse({
+                                        id: part.approval.id,
+                                        approved: true,
+                                      })
+                                    }
+                                  >
+                                    Approve
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                      addToolApprovalResponse({
+                                        id: part.approval.id,
+                                        approved: false,
+                                      })
+                                    }
+                                  >
+                                    Deny
+                                  </Button>
+                                </div>
+                              )}
+                              <ToolOutput
+                                output={part.output}
+                                errorText={part.errorText}
+                              />
+                            </ToolContent>
+                          </Tool>
                         )
                     }
                   })}

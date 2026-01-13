@@ -4,6 +4,25 @@ import { streamWeatherAgent } from '@/lib/agents'
 import { loadChat, upsertMessage } from '@/lib/dao/chatDao'
 import { db } from '@/db'
 
+/**
+ * Check if a message contains a tool with approval-responded state
+ */
+function hasApprovalResponse(
+  message: StoredUIMessage,
+  approved: boolean
+): boolean {
+  return (
+    message.role === 'assistant' &&
+    message.parts.some(
+      (part) =>
+        'state' in part &&
+        part.state === 'approval-responded' &&
+        'approval' in part &&
+        (part.approval as { approved?: boolean })?.approved === approved
+    )
+  )
+}
+
 export const Route = createFileRoute('/demo/api/chat')({
   server: {
     handlers: {
@@ -11,8 +30,15 @@ export const Route = createFileRoute('/demo/api/chat')({
         const { message, id }: { message: StoredUIMessage; id: string } =
           await request.json()
 
-        // Save user message first
+        // Save incoming message (user message OR assistant with approval response)
         await upsertMessage({ chatId: id, message, db })
+
+        // For denied approvals, just save and return empty response
+        if (hasApprovalResponse(message, false)) {
+          return new Response('', {
+            headers: { 'Content-Type': 'text/event-stream' },
+          })
+        }
 
         // Load all messages including the one we just saved
         const messages = await loadChat(id, db)
