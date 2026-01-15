@@ -20,6 +20,15 @@ The goal is to work on a new idea with Tanstack Start and not have to think abou
 └── web-ui/      # Tanstack Start
 ```
 
+## Steal this repository
+
+```
+git clone https://github.com/cheriot/electron-tanstack-demo.git DIR_NAME
+git remote rename origin electron-tanstack-demo
+git remote add origin REPO_URI
+git push --set-upstream origin master
+```
+
 ## Development
 
 See [Development.md](DEVELOPMENT.md).

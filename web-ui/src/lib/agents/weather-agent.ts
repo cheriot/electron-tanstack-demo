@@ -15,7 +15,7 @@ import type {
 } from './types'
 
 const WEATHER_AGENT_CONFIG: AgentConfig = {
-  model: gateway('xai/grok-code-fast-1'),
+  model: gateway('zai/glm-4.7'),
   maxSteps: 5,
 }
 
