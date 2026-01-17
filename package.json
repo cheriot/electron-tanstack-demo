@@ -12,7 +12,8 @@
     "delvitecache": "rm -rf web-ui/node_modules/.vite web-ui/node_modules/.vite-temp",
     "check": "pnpm --recursive check",
     "lint": "pnpm --recursive lint",
-    "typecheck": "pnpm --recursive typecheck"
+    "typecheck": "pnpm --recursive typecheck",
+    "clean": "rm -rf desktop/.vite desktop/out web-ui/.output web-ui/node_modules/.vite web-ui/node_modules/.vite-temp"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
